@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if ingredient_list %}
+        {% for ingredient in ingredient_list%}
+            <div class="col-md-10 row">
+                <div class="col-md-8">
+                    {{ingredient.ingredient_name}}
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="{% url 'ingredient:edit' ingredient.article_number %}">Edit</a>
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="{% url 'ingredient:delete' ingredient.article_number %}">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        Não tem nada
+    {% endif%}
+    {{ newing }}
+    <a href="{% url 'ingredient:edit' '0' %}">Add</a>
+{% endblock %}
