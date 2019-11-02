@@ -1,24 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
+    <a class="btn btn-secondary btn-sm mb-3" href="{% url 'recipes:index' %}">tlt:Return</a>
     {% if recipe.recipe_ingredients.all %}
-        {% for recipe_ingredient in recipe.recipe_ingredients.all %}
-            <li class="list-group-item"> 
-                <div class="col-md-12 row">
-                    <div class="col-md-8">
-                        <strong>
-                            {{ recipe_ingredient.ingredient.ingredient_name }} 
-                        </strong>
+        <ul class="list-group">
+            {% for recipe_ingredient in recipe.recipe_ingredients.all %}        
+                <li class="list-group-item"> 
+                    <div class="col-md-12 row">
+                        <div class="col-md-8">
+                            <strong>
+                                {{ recipe_ingredient.ingredient.ingredient_name }} 
+                            </strong>
+                        </div>
+                        <div class="col-md-3">
+                            {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}}
+                        </div>
+                        <div class="col-md-1">
+                            <a class="btn btn-danger btn-small rounded pull-right" href="">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}}
+                </li>
+            {% endfor %}
+            <li class="list-group-item">
+                <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
+                    {% csrf_token %} 
+                    <div class="col-md-12 row">
+                        <div class="col-md-8">
+                            
+                                {{ ing_rec_form }}
+                            
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-1">
+                            <input type="submit"  class="btn btn-success btn-small rounded pull-right">
+                                <i class="fas fa-check"></i>
+                            </input>
+                        </div>
                     </div>
-                    <div class="col-md-1">
-                        <a class="btn btn-danger btn-small rounded pull-right" href="">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </div>
+                </form>
             </li>
-        {% endfor %}
+        </ul>
+    {% else %}
+        <li class="list-group-item">
+            {{ ing_rec_form }}
+        </li>
     {% endif %}
 {% endblock %}
