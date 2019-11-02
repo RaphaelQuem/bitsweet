@@ -1,5 +1,5 @@
 from django.forms import ModelForm ,NumberInput, TextInput, ChoiceField, Select
-from ingredient.models import Ingredient, MeasurementUnit
+from .models import Ingredient, MeasurementUnit
  
 class IngredientForm(ModelForm):
     class Meta:

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if recipe.recipe_ingredients.all %}
+        {% for recipe_ingredient in recipe.recipe_ingredients.all %}
+            <li class="list-group-item"> 
+                <div class="col-md-12 row">
+                    <div class="col-md-8">
+                        <strong>
+                            {{ recipe_ingredient.ingredient.ingredient_name }} 
+                        </strong>
+                    </div>
+                    <div class="col-md-3">
+                        {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}}
+                    </div>
+                    <div class="col-md-1">
+                        <a class="btn btn-danger btn-small rounded pull-right" href="">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

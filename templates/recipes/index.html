@@ -2,19 +2,28 @@
 {% block content %}
     {% if recipe_list %}
         {% for recipe in recipe_list%}
-            <div class="card mb-2">
+            <div class="card bg-light mb-2">
                 <div class="card-header">
                     {{ recipe.recipe_name }}
                 </div>
                 <div class="card-body row">
-                    <div class="col-md-8 text-justify">
+                    <div class="col-md-8 card-text">
                         <p>
                             {{ recipe.recipe_description}}
                         </p>
                     </div>
-                    <div class="col-md-4 text-center">
-                        <img class="img-fluid" src="{{ recipe.recipe_img_url }}">
+                    <div class="col-md-4 text-center mh-100">
+                        {% if recipe.recipe_img_url %}
+                            <img class="img-fluid rounded" src="{{ recipe.recipe_img_url }}">
+                        {% else %}
+                            <font style="font-size:72px;"><i class="fas fa-camera-retro"></i></font>
+                        {% endif %}
                     </div>
+                </div>
+                <div class="card-footer text-right">
+                    <a class="btn btn-primary btn-sm pull-right" href="{% url 'recipes:edit' recipe.recipe_id %}">tlt:View</a>
+                    <a class="btn btn-primary btn-sm pull-right" href="">tlt:Edit</a>
+                    <a class="btn btn-danger btn-sm pull-right" href="">tlt:Delete</a>
                 </div>
             </div>
         {% endfor %}
