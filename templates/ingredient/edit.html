@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<a class="btn btn-secondary btn-sm mb-3" href="{% url 'ingredient:index' %}">Return</a>
+<a class="btn btn-secondary btn-sm mb-3" href="{% url 'ingredient:index' %}">tlt:Return</a>
 <h1 class="text-center mb-3">{{ question.question_text }}</h1>
 
 {% if error_message %}
@@ -11,8 +11,19 @@
 
 <form action="{% url 'ingredient:save' article_number %}" method="post">
     {% csrf_token %} 
-    {{ form.as_p }}
-	<input type="submit" value="Save" class="btn btn-success btn-lg btn-block mt-4" />
+    <div class="col-md-12 mb-2 row">
+        <div class="col-md-3">
+            tlt:Ingredient name
+        </div>
+        {{ form.ingredient_name}}
+    </div>
+    <div class="col-md-12 mb-2 row">
+        <div class="col-md-3">
+            tlt:Cost
+        </div>
+        {{ form.cost_per_unit}}&nbsp;/&nbsp;{{ form.cost_amount}} {{ form.unit }}
+    </div>
+	<input type="submit" value="tlt:Save" class="btn btn-success btn-lg btn-block mt-4" />
 </form>
 
 

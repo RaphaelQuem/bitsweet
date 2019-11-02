@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if recipe_list %}
+        {% for recipe in recipe_list%}
+            <div class="card mb-2">
+                <div class="card-header">
+                    {{ recipe.recipe_name }}
+                </div>
+                <div class="card-body row">
+                    <div class="col-md-8 text-justify">
+                        <p>
+                            {{ recipe.recipe_description}}
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <img class="img-fluid" src="{{ recipe.recipe_img_url }}">
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        tlt:Não tem nada
+    {% endif%}
+{% endblock %}

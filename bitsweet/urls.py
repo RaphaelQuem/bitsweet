@@ -19,4 +19,5 @@ from django.conf.urls import url, include
 urlpatterns = [
     url('admin/', admin.site.urls),
     url('ingredient/', include('ingredient.urls')),
+    url('recipes/', include('recipes.urls')),
 ]

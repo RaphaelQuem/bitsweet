@@ -11,7 +11,7 @@ class MeasurementUnit(models.Model):
 class Ingredient(models.Model):
     article_number = models.AutoField(primary_key=True)
     ingredient_name = models.CharField(max_length=100, null=False)
-    cost_amount = models.FloatField(validators=[MinValueValidator(0)])
+    cost_amount = models.FloatField(validators=[MinValueValidator(0.1)])
     cost_per_unit = models.FloatField(validators=[MinValueValidator(0)])
     unit = models.ForeignKey(MeasurementUnit,on_delete=models.CASCADE)
 

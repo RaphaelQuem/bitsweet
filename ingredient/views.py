@@ -36,7 +36,8 @@ def save(request, article_number):
                 ingredient = Ingredient(
                                         ingredient_name= formvalue.ingredient_name,
                                         unit = formvalue.unit,
-                                        cost_per_unit = formvalue.cost_per_unit)
+                                        cost_per_unit = formvalue.cost_per_unit,
+                                        cost_amount = formvalue.cost_amount)
             ingredient.save()
     except Exception as e:
         return render(request, 'ingredient/edit.html', {

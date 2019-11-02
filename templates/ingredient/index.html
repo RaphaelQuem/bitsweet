@@ -7,15 +7,15 @@
                     {{ingredient.ingredient_name}}
                 </div>
                 <div class="col-md-2 text-center">
-                    <a href="{% url 'ingredient:edit' ingredient.article_number %}">Edit</a>
+                    <a href="{% url 'ingredient:edit' ingredient.article_number %}">tlt:Edit</a>
                 </div>
                 <div class="col-md-2 text-center">
-                    <a href="{% url 'ingredient:delete' ingredient.article_number %}">Delete</a>
+                    <a href="{% url 'ingredient:delete' ingredient.article_number %}">tlt:Delete</a>
                 </div>
             </div>
         {% endfor %}
     {% else %}
-        Não tem nada
+        tlt:Não tem nada
     {% endif%}
     {{ newing }}
     <a href="{% url 'ingredient:edit' '0' %}">Add</a>
