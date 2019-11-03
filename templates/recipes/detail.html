@@ -1,50 +1,150 @@
 {% extends 'base.html' %}
 {% block content %}
-    <a class="btn btn-secondary btn-sm mb-3" href="{% url 'recipes:index' %}">tlt:Return</a>
-    {% if recipe.recipe_ingredients.all %}
-        <ul class="list-group">
-            {% for recipe_ingredient in recipe.recipe_ingredients.all %}        
-                <li class="list-group-item"> 
-                    <div class="col-md-12 row">
-                        <div class="col-md-8">
-                            <strong>
-                                {{ recipe_ingredient.ingredient.ingredient_name }} 
-                            </strong>
-                        </div>
-                        <div class="col-md-3">
-                            {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}}
-                        </div>
-                        <div class="col-md-1">
-                            <a class="btn btn-danger btn-small rounded pull-right" href="">
-                                <i class="fas fa-times"></i>
-                            </a>
-                        </div>
+    <script>
+        function myFunction() {
+            document.getElementById("myImg").src = "hackanm.gif";
+        }
+    </script>
+    <a class="btn btn-secondary btn-sm" href="{% url 'recipes:index' %}">tlt:Return</a>
+    
+    <form class="mb-3" action="{% url 'recipes:save' recipe.recipe_id %}" method="post">
+        {% csrf_token %} 
+        <div class="card bg-light mb-2">
+            <div class="card-header">
+                <h1>
+                    {% if readonly %}
+                        {{ recipe.recipe_name }}
+                    {% else %}
+                        {{ form.recipe_name }}
+                    {% endif %}
+                </h1>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12 row">
+                    <div class="col-md-6">
+                        {% if readonly %}
+                            <p class="text-justify">
+                                {{ recipe.recipe_description }}
+                            </p>
+                        {% else %}
+                            {{ form.recipe_description }}
+                        {% endif %}
                     </div>
-                </li>
-            {% endfor %}
-            <li class="list-group-item">
-                <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
-                    {% csrf_token %} 
-                    <div class="col-md-12 row">
-                        <div class="col-md-8">
-                            
+                    <div class="col-md-6">
+                        {% if not readonly %}
+                            <div class="row">
+                                <div class="col-md-10">
+                                    {{ form.recipe_img_url }}
+                                </div>
+                                <div class="col-md-2">
+                                    <a class="btn btn-info rounded col-md-12">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if recipe.recipe_img_url %}
+                            <div class="image">
+                                <img class="img-fluid rounded" src="{{ recipe.recipe_img_url }}">
+                            </div>
+                        {% else %}
+                            <font style="font-size:72px;"><i class="fas fa-camera-retro"></i></font>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="col-md-12 row text-right">
+                    <div class="col-md-4 text-center">
+                        <h4>
+                            <i class="fas fa-stopwatch"></i>
+                        <h4>
+                        {% if readonly %}
+                            {{ recipe.preparation_time }}H
+                        {% else %}
+                            {{ form.preparation_time}}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h4>
+                            <i class="fas fa-pizza-slice"></i>
+                        <h4>
+                        {% if readonly %}
+                            {{ recipe.servings }} 
+                        {% else %}
+                            {{ form.servings}}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <input type="submit" value="tlt:Save" class="btn btn-success btn-lg btn-block mt-4" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div>
+        <h3 class=>
+            Tlt:Ingredients
+        </h3>
+        {% if recipe.recipe_ingredients.all %}
+            <ul class="list-group">
+                {% for recipe_ingredient in recipe.recipe_ingredients.all %}        
+                    <li class="list-group-item"> 
+                        <div class="col-md-12 row">
+                            <div class="col-md-8">
+                                <strong>
+                                    {{ recipe_ingredient.ingredient.ingredient_name }} 
+                                </strong>
+                            </div>
+                            <div class="col-md-3">
+                                {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}}
+                            </div>
+                            <div class="col-md-1">
+                                <a href="{% url 'recipes:del_ingredient' recipe_ingredient.recipe_ingredient_id %}" class="btn btn-danger rounded pull-right col-md-12">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+                <li class="list-group-item">
+                    <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
+                        {% csrf_token %} 
+                        <div class="col-md-12 row">
+                            <div class="col-md-8">      
                                 {{ ing_rec_form }}
-                            
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit"  class="btn btn-success rounded pull-right col-md-12">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-3">
+                    </form>
+                </li>
+            </ul>
+        {% else %}
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
+                        {% csrf_token %} 
+                        <div class="col-md-12 row">
+                            <div class="col-md-8">      
+                                {{ ing_rec_form }}
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit"  class="btn btn-success rounded pull-right col-md-12">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-1">
-                            <input type="submit"  class="btn btn-success btn-small rounded pull-right">
-                                <i class="fas fa-check"></i>
-                            </input>
-                        </div>
-                    </div>
-                </form>
-            </li>
-        </ul>
-    {% else %}
-        <li class="list-group-item">
-            {{ ing_rec_form }}
-        </li>
-    {% endif %}
+                    </form>
+                </li>
+            </ul>
+        {% endif %}
+    </div>
 {% endblock %}

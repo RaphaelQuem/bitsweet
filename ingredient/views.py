@@ -8,6 +8,10 @@ from .forms import IngredientForm
 def index(request):
     return render(request, 'ingredient/index.html', {'ingredient_list': Ingredient.objects.order_by('article_number')[:10]})
 
+def filter(request,page_id, filter):
+    filtered = Ingredient.objects.all().filter(ingredient_name__icontains=filter)
+    return render(request, 'ingredient/index.html', {'ingredient_list': filtered.order_by('article_number')[:10]})
+
 def edit(request, article_number):
     try:
         ingredient = Ingredient.objects.get(pk=article_number)
@@ -26,7 +30,6 @@ def delete(request, article_number):
 def save(request, article_number):
     try:
         form = IngredientForm(request.POST)
-        print(form)
         if form.is_valid():
             formvalue = form.save(commit=False)
             if article_number != 0:

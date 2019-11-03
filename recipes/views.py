@@ -1,14 +1,57 @@
 from django.shortcuts import render
 from .models import Recipe, IngredientInRecipe
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from ingredient.models import Ingredient
+from django.urls import reverse
 from .forms import RecipeForm, IngredientInRecipeForm
+from django.core import serializers
+
 
 def index(request):
     return render(request, 'recipes/index.html', {'recipe_list': Recipe.objects.order_by('recipe_id')[:10]})
 
+def save(request, recipe_id):
+    try:
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            formvalue = form.save(commit=False)
+            if recipe_id != 0:
+                recipe = formvalue
+                recipe.recipe_id = recipe_id
+            else:
+                recipe = Recipe(
+                                        recipe_name= formvalue.recipe_name,
+                                        recipe_description = formvalue.recipe_description,
+                                        recipe_img_url = formvalue.recipe_img_url,
+                                        servings = formvalue.servings,
+                                        preparation_time = formvalue.preparation_time)
+            recipe.save()
+    except Exception as e:
+        context = get_recipe_context(recipe_id)
+        context['error_message'] = e
+        return render(
+            request, 
+            'recipes/details.html', 
+            context)
+    else:
+        return HttpResponseRedirect(reverse('recipes:index', args=()))
+
+def del_ingredient(request, recipe_ingredient_id):
+    print('del_ingredient')
+    ing_rec = IngredientInRecipe.objects.get(pk=recipe_ingredient_id)
+    recipe_id = ing_rec.recipe.recipe_id
+    recipe = Recipe.objects.get(pk=recipe_id)
+    ing_rec.delete()
+    recipe.save()
+    return render(
+        request,
+        'recipes/detail.html',
+        get_recipe_context(recipe_id) 
+    )
+
 def add_ingredient(request, recipe_id):
     recipe = get_recipe(recipe_id)
     try:
-        print('try')
         ing_rec_form = IngredientInRecipeForm(request.POST)
         formvalue = ing_rec_form.save(commit=False)
         
@@ -21,13 +64,11 @@ def add_ingredient(request, recipe_id):
         recipe.recipe_ingredients.add(ing_rec)
         recipe.save()
         
-        print('ing_rec_form', ing_rec_form)
-        print('ing_rec', ing_rec)
-        print('formvalue', formvalue)
-        print('recipe', recipe)
     except Exception as e:
-        print(e)
-        return render(request, 'ingredient/edit.html', { 'e': e})
+        return render(
+                request, 
+                'recipes/detail.html',
+                { 'e': e})
         
     #redirect?
     return render(
@@ -37,7 +78,6 @@ def add_ingredient(request, recipe_id):
     )
 
 def edit(request, recipe_id):
-    print('edit')
     return render(
         request,
         'recipes/detail.html',
@@ -49,6 +89,7 @@ def get_recipe(recipe_id):
         recipe = Recipe.objects.get(pk=recipe_id)
     except Recipe.DoesNotExist:
         recipe = Recipe()
+        recipe.recipe_id = recipe_id
     
     return recipe
     

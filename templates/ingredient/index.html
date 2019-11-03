@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
+    <div class="col-md-12">
+        <input type="text" class="form-control col-md-10"></input>
+        <a href="{% url 'ingredient:filter' '0' 'o' %}">Filter</a>
+    </div>
     {% if ingredient_list %}
         {% for ingredient in ingredient_list%}
             <div class="col-md-10 row">
