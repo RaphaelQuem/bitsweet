@@ -8,9 +8,10 @@ from .forms import IngredientForm
 def index(request):
     return render(request, 'ingredient/index.html', {'ingredient_list': Ingredient.objects.order_by('article_number')[:10]})
 
-def filter(request,page_id, filter):
-    filtered = Ingredient.objects.all().filter(ingredient_name__icontains=filter)
-    return render(request, 'ingredient/index.html', {'ingredient_list': filtered.order_by('article_number')[:10]})
+def filter(request):
+    strfilter = request.POST['ingredient-filter']
+    filtered = Ingredient.objects.all().filter(ingredient_name__icontains=strfilter)
+    return render(request, 'ingredient/index.html', {'ingredient_list': filtered.order_by('article_number')[:10], 'ingredient_filter': strfilter})
 
 def edit(request, article_number):
     try:

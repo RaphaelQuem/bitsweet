@@ -75,9 +75,11 @@
                             {{ form.servings}}
                         {% endif %}
                     </div>
-                    <div class="col-md-4">
-                        <input type="submit" value="tlt:Save" class="btn btn-success btn-lg btn-block mt-4" />
-                    </div>
+                    {% if not readonly %}
+                        <div class="col-md-4">
+                            <input type="submit" value="tlt:Save" class="btn btn-success btn-lg btn-block mt-4" />
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -99,52 +101,58 @@
                             <div class="col-md-3">
                                 {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}}
                             </div>
-                            <div class="col-md-1">
-                                <a href="{% url 'recipes:del_ingredient' recipe_ingredient.recipe_ingredient_id %}" class="btn btn-danger rounded pull-right col-md-12">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </div>
+                            {% if not readonly%}
+                                <div class="col-md-1">
+                                    <a href="{% url 'recipes:del_ingredient' recipe_ingredient.recipe_ingredient_id %}" class="btn btn-danger rounded pull-right col-md-12">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </div>
+                            {% endif%}
                         </div>
                     </li>
                 {% endfor %}
-                <li class="list-group-item">
-                    <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
-                        {% csrf_token %} 
-                        <div class="col-md-12 row">
-                            <div class="col-md-8">      
-                                {{ ing_rec_form }}
+                {% if not readonly %}
+                    <li class="list-group-item">
+                        <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
+                            {% csrf_token %} 
+                            <div class="col-md-12 row">
+                                <div class="col-md-8">      
+                                    {{ ing_rec_form }}
+                                </div>
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="submit"  class="btn btn-success rounded pull-right col-md-12">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-md-3">
-                            </div>
-                            <div class="col-md-1">
-                                <button type="submit"  class="btn btn-success rounded pull-right col-md-12">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </li>
+                        </form>
+                    </li>
+                {% endif %}
             </ul>
         {% else %}
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
-                        {% csrf_token %} 
-                        <div class="col-md-12 row">
-                            <div class="col-md-8">      
-                                {{ ing_rec_form }}
+            {% if not readonly %}
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
+                            {% csrf_token %} 
+                            <div class="col-md-12 row">
+                                <div class="col-md-8">      
+                                    {{ ing_rec_form }}
+                                </div>
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-1">       
+                                    <button type="submit"  class="btn btn-success rounded pull-right col-md-12">
+                                        <i class="fas fa-check"></i>
+                                    </button> 
+                                </div>
                             </div>
-                            <div class="col-md-3">
-                            </div>
-                            <div class="col-md-1">
-                                <button type="submit"  class="btn btn-success rounded pull-right col-md-12">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </li>
-            </ul>
+                        </form>
+                    </li>
+                </ul>
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}

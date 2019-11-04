@@ -1,26 +1,34 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="col-md-12">
-        <input type="text" class="form-control col-md-10"></input>
-        <a href="{% url 'ingredient:filter' '0' 'o' %}">Filter</a>
+    <div class="container">
+        <div class="col-md-12 row mb-3 center">
+            <form class="col-md-12 row btn-block" action="{% url 'ingredient:filter'  %}" method="post">
+                {% csrf_token %}
+                <input autofocus id="ingredient-filter" name="ingredient-filter" placeholder="tlt:Filter" value="{{ ingredient_filter }}" type="text" class="form-control col-md-12"></input>
+            </form>
+        </div>
+        {% if ingredient_list %}
+            <ul class="list-group">
+                {% for ingredient in ingredient_list%}
+                    <li class="list-group-item">
+                        <div class="col-md-12 row">
+                            <div class="col-md-8">
+                                {{ingredient.ingredient_name}}
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <a href="{% url 'ingredient:edit' ingredient.article_number %}">tlt:Edit</a>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <a href="{% url 'ingredient:delete' ingredient.article_number %}">tlt:Delete</a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            tlt:Não tem nada
+        {% endif%}
+        {{ newing }}
+        <a href="{% url 'ingredient:edit' '0' %}">Add</a>
     </div>
-    {% if ingredient_list %}
-        {% for ingredient in ingredient_list%}
-            <div class="col-md-10 row">
-                <div class="col-md-8">
-                    {{ingredient.ingredient_name}}
-                </div>
-                <div class="col-md-2 text-center">
-                    <a href="{% url 'ingredient:edit' ingredient.article_number %}">tlt:Edit</a>
-                </div>
-                <div class="col-md-2 text-center">
-                    <a href="{% url 'ingredient:delete' ingredient.article_number %}">tlt:Delete</a>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        tlt:Não tem nada
-    {% endif%}
-    {{ newing }}
-    <a href="{% url 'ingredient:edit' '0' %}">Add</a>
 {% endblock %}

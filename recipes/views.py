@@ -27,7 +27,7 @@ def save(request, recipe_id):
                                         preparation_time = formvalue.preparation_time)
             recipe.save()
     except Exception as e:
-        context = get_recipe_context(recipe_id)
+        context = get_recipe_context(recipe_id,False)
         context['error_message'] = e
         return render(
             request, 
@@ -46,7 +46,7 @@ def del_ingredient(request, recipe_ingredient_id):
     return render(
         request,
         'recipes/detail.html',
-        get_recipe_context(recipe_id) 
+        get_recipe_context(recipe_id, False) 
     )
 
 def add_ingredient(request, recipe_id):
@@ -74,14 +74,21 @@ def add_ingredient(request, recipe_id):
     return render(
         request,
         'recipes/detail.html',
-        get_recipe_context(recipe_id)
+        get_recipe_context(recipe_id, False)
+    )
+    
+def details(request, recipe_id):
+    return render(
+        request,
+        'recipes/detail.html',
+        get_recipe_context(recipe_id, True) 
     )
 
 def edit(request, recipe_id):
     return render(
         request,
         'recipes/detail.html',
-        get_recipe_context(recipe_id) 
+        get_recipe_context(recipe_id, False) 
     )
     
 def get_recipe(recipe_id):
@@ -93,7 +100,7 @@ def get_recipe(recipe_id):
     
     return recipe
     
-def get_recipe_context(recipe_id):
+def get_recipe_context(recipe_id, readonly):
     recipe = get_recipe(recipe_id)
     form = RecipeForm(instance=recipe)
     
@@ -104,6 +111,7 @@ def get_recipe_context(recipe_id):
     return {
         'recipe': recipe,
         'form':form,
-        'ing_rec_form': ing_rec_form
+        'ing_rec_form': ing_rec_form,
+        'readonly': readonly
     }
     
