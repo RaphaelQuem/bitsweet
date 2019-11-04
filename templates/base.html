@@ -11,12 +11,14 @@
     <title>Bitsweet | {% block title %}{% endblock %}</title>
   </head>
   <body>
-    <div class="container">
+    {% include 'partials/navbar.html' %}
+    <div class="container mb-9">
       <div class="row">
         <div class="col-md-10 m-auto">
           {% block content %}{% endblock %}
         </div>
       </div>
     </div>
+    <div>Bitsweet</div>
   </body>
 </html>

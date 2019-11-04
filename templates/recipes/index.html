@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
+    {% if error_message %}
+        <p class="alert alert-danger">
+            <strong>{{ error_message }}</strong>
+        </p>
+    {% endif %}
     <a href="{% url 'recipes:edit' '0' %}">Add</a>
     {% if recipe_list %}
         {% for recipe in recipe_list%}
@@ -24,7 +29,7 @@
                 <div class="card-footer text-right">
                     <a class="btn btn-primary btn-sm pull-right" href="{% url 'recipes:details' recipe.recipe_id %}">tlt:View</a>
                     <a class="btn btn-primary btn-sm pull-right" href="{% url 'recipes:edit' recipe.recipe_id %}">tlt:Edit</a>
-                    <a class="btn btn-danger btn-sm pull-right" href="">tlt:Delete</a>
+                    <a class="btn btn-danger btn-sm pull-right" href="{% url 'recipes:delete' recipe.recipe_id %}">tlt:Delete</a>
                 </div>
             </div>
         {% endfor %}

@@ -20,4 +20,5 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     url('ingredient/', include('ingredient.urls')),
     url('recipes/', include('recipes.urls')),
+    url('', include('recipes.urls')),
 ]

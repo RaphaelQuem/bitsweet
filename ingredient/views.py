@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404,render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import Q, ProtectedError
 from .models import Ingredient, MeasurementUnit
 from .forms import IngredientForm
+
 
 
 def index(request):
@@ -10,8 +12,16 @@ def index(request):
 
 def filter(request):
     strfilter = request.POST['ingredient-filter']
-    filtered = Ingredient.objects.all().filter(ingredient_name__icontains=strfilter)
-    return render(request, 'ingredient/index.html', {'ingredient_list': filtered.order_by('article_number')[:10], 'ingredient_filter': strfilter})
+    try:
+        strfilter = int(strfilter)
+        filtered =  Ingredient.objects.filter(
+                Q(ingredient_name__icontains=strfilter) |
+                Q(article_number__exact=strfilter)
+            )[:10]
+    except Exception:       
+        filtered = Ingredient.objects.filter(ingredient_name__icontains=strfilter).order_by('article_number')[:10]
+
+    return render(request, 'ingredient/index.html', {'ingredient_list': filtered, 'ingredient_filter': strfilter})
 
 def edit(request, article_number):
     try:
@@ -25,7 +35,13 @@ def edit(request, article_number):
                      'form':form })
 
 def delete(request, article_number):
-    Ingredient.objects.get(pk=article_number).delete()
+    try:
+        Ingredient.objects.get(pk=article_number).delete()
+    except ProtectedError:
+        return render(request, 'ingredient/index.html', {
+                'ingredient_list': Ingredient.objects.order_by('article_number')[:10],
+                'error_message': 'tlt: this ingredient is currently being used :('
+            })
     return HttpResponseRedirect(reverse('ingredient:index', args=()))
 
 def save(request, article_number):

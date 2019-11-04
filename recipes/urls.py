@@ -8,5 +8,6 @@ urlpatterns= [
   path('<int:recipe_id>/details',views.details,name='details'),
   path('<int:recipe_id>',views.add_ingredient,name='add_ingredient'),
   path('<int:recipe_ingredient_id>/remove',views.del_ingredient,name='del_ingredient'),
-  path('<int:recipe_id>/save',views.save,name='save')
+  path('<int:recipe_id>/save',views.save,name='save'),
+  path('<int:recipe_id>/delete',views.delete,name='delete')
 ]

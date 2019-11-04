@@ -12,6 +12,9 @@ class RecipeForm(ModelForm):
             'preparation_time':NumberInput(attrs={'placeholder': 'tlt:Servings', 'class':'form-control'})
         }
         fields = ['recipe_name','recipe_description', 'recipe_img_url', 'servings', 'preparation_time']
+    def __init__(self, *args, **kwargs):
+        super(RecipeForm, self).__init__(*args, **kwargs)
+        self.fields['recipe_img_url'].required = False
         
 class IngredientInRecipeForm(ModelForm):
     class Meta:

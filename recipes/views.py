@@ -5,6 +5,9 @@ from ingredient.models import Ingredient
 from django.urls import reverse
 from .forms import RecipeForm, IngredientInRecipeForm
 from django.core import serializers
+from django.db.models import F, Sum
+from django.db.utils import IntegrityError
+import sys
 
 
 def index(request):
@@ -25,29 +28,39 @@ def save(request, recipe_id):
                                         recipe_img_url = formvalue.recipe_img_url,
                                         servings = formvalue.servings,
                                         preparation_time = formvalue.preparation_time)
-            recipe.save()
-    except Exception as e:
+                recipe.save()
+                
+    except:
         context = get_recipe_context(recipe_id,False)
-        context['error_message'] = e
+        context["error_message"] = "tlt:Unexpected error" + sys.exc_info()[0]
         return render(
             request, 
             'recipes/details.html', 
             context)
     else:
-        return HttpResponseRedirect(reverse('recipes:index', args=()))
+        return HttpResponseRedirect(reverse('recipes:edit', args=[recipe.recipe_id]))
+    
+def delete(request, recipe_id):
+    try:
+        Recipe.objects.get(pk=recipe_id).delete()
+    except Recipe.DoesNotExist:
+        render(
+                request, 
+                'recipes/index.html', 
+                {
+                    'recipe_list': Recipe.objects.order_by('recipe_id')[:10],
+                    'error_message': "tlt:Recipe does not exist" 
+                })
+    
+    return HttpResponseRedirect(reverse('recipes:index', args=()))
 
 def del_ingredient(request, recipe_ingredient_id):
-    print('del_ingredient')
     ing_rec = IngredientInRecipe.objects.get(pk=recipe_ingredient_id)
     recipe_id = ing_rec.recipe.recipe_id
     recipe = Recipe.objects.get(pk=recipe_id)
     ing_rec.delete()
     recipe.save()
-    return render(
-        request,
-        'recipes/detail.html',
-        get_recipe_context(recipe_id, False) 
-    )
+    return HttpResponseRedirect(reverse('recipes:edit', args=[recipe.recipe_id]))
 
 def add_ingredient(request, recipe_id):
     recipe = get_recipe(recipe_id)
@@ -59,23 +72,31 @@ def add_ingredient(request, recipe_id):
         ing_rec.recipe = recipe
         ing_rec.ingredient = formvalue.ingredient
         ing_rec.amount_in_recipe = formvalue.amount_in_recipe
+        ing_rec.cost = (ing_rec.amount_in_recipe * ing_rec.ingredient.cost_per_unit) / ing_rec.ingredient.cost_amount
         ing_rec.save()
         
         recipe.recipe_ingredients.add(ing_rec)
         recipe.save()
         
-    except Exception as e:
+    except IntegrityError:
+        context = get_recipe_context(recipe_id, False)
+        context["error_message"] = "tlt: save the recipe first"
         return render(
                 request, 
                 'recipes/detail.html',
-                { 'e': e})
+                context
+                )
+    except:
+        context = get_recipe_context(recipe_id, False)
+        context["error_message"] = "tlt:Unexpected error" + sys.exc_info()[0]
+        return render(
+                request, 
+                'recipes/detail.html',
+                context
+                )
         
-    #redirect?
-    return render(
-        request,
-        'recipes/detail.html',
-        get_recipe_context(recipe_id, False)
-    )
+    return HttpResponseRedirect(reverse('recipes:edit', args=[recipe.recipe_id]))
+    
     
 def details(request, recipe_id):
     return render(
@@ -108,10 +129,15 @@ def get_recipe_context(recipe_id, readonly):
     ing_rec.recipe = recipe
     ing_rec_form = IngredientInRecipeForm(instance=ing_rec)
     
+    aggr = recipe.recipe_ingredients.aggregate(
+            total_cost=Sum(F('cost'))
+        )
+    
     return {
         'recipe': recipe,
         'form':form,
         'ing_rec_form': ing_rec_form,
-        'readonly': readonly
+        'readonly': readonly,
+        'recipe_cost': aggr['total_cost']
     }
     

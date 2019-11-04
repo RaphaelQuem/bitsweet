@@ -6,7 +6,11 @@
         }
     </script>
     <a class="btn btn-secondary btn-sm" href="{% url 'recipes:index' %}">tlt:Return</a>
-    
+    {% if error_message %}
+        <p class="alert alert-danger">
+            <strong>{{ error_message }}</strong>
+        </p>
+    {% endif %}
     <form class="mb-3" action="{% url 'recipes:save' recipe.recipe_id %}" method="post">
         {% csrf_token %} 
         <div class="card bg-light mb-2">
@@ -75,6 +79,12 @@
                             {{ form.servings}}
                         {% endif %}
                     </div>
+                    <div class="col-md-4 text-center">
+                        <h4>
+                            <i class="fas fa-dollar-sign"></i>
+                        <h4>
+                        {{ recipe_cost | floatformat:2}}
+                    </div>
                     {% if not readonly %}
                         <div class="col-md-4">
                             <input type="submit" value="tlt:Save" class="btn btn-success btn-lg btn-block mt-4" />
@@ -86,20 +96,20 @@
     </form>
     <div>
         <h3 class=>
-            Tlt:Ingredients
+            tlt:Ingredients
         </h3>
         {% if recipe.recipe_ingredients.all %}
             <ul class="list-group">
                 {% for recipe_ingredient in recipe.recipe_ingredients.all %}        
                     <li class="list-group-item"> 
                         <div class="col-md-12 row">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <strong>
                                     {{ recipe_ingredient.ingredient.ingredient_name }} 
                                 </strong>
                             </div>
-                            <div class="col-md-3">
-                                {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}}
+                            <div class="col-md-4">
+                                {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}} ({{recipe_ingredient.cost | floatformat:2}})
                             </div>
                             {% if not readonly%}
                                 <div class="col-md-1">
