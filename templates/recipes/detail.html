@@ -1,17 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-    <script>
-        function myFunction() {
-            document.getElementById("myImg").src = "hackanm.gif";
-        }
-    </script>
-    <a class="btn btn-secondary btn-sm" href="{% url 'recipes:index' %}">tlt:Return</a>
+
+    <a class="btn btn-secondary btn-sm mb-3" href="{% url 'recipes:index' %}">Back</a>
     {% if error_message %}
         <p class="alert alert-danger">
             <strong>{{ error_message }}</strong>
         </p>
     {% endif %}
-    <form class="mb-3" action="{% url 'recipes:save' recipe.recipe_id %}" method="post">
+    <form id="recipe_form" class="mb-3" action="{% url 'recipes:save' recipe.recipe_id %}" method="post">
         {% csrf_token %} 
         <div class="card bg-light mb-2">
             <div class="card-header">
@@ -37,23 +33,14 @@
                     <div class="col-md-6">
                         {% if not readonly %}
                             <div class="row">
-                                <div class="col-md-10">
+                                <div class="col-md-12">
                                     {{ form.recipe_img_url }}
                                 </div>
-                                <div class="col-md-2">
-                                    <a class="btn btn-info rounded col-md-12">
-                                        <i class="fas fa-sync-alt"></i>
-                                    </a>
-                                </div>
                             </div>
                         {% endif %}
-                        {% if recipe.recipe_img_url %}
-                            <div class="image">
-                                <img class="img-fluid rounded" src="{{ recipe.recipe_img_url }}">
-                            </div>
-                        {% else %}
-                            <font style="font-size:72px;"><i class="fas fa-camera-retro"></i></font>
-                        {% endif %}
+
+                        <img id="recipe_img" class="img-fluid rounded" src="{{ recipe.recipe_img_url }}" onerror="imgOnError(this)">
+              
                     </div>
                 </div>
             </div>
@@ -87,16 +74,16 @@
                     </div>
                     {% if not readonly %}
                         <div class="col-md-4">
-                            <input type="submit" value="tlt:Save" class="btn btn-success btn-lg btn-block mt-4" />
+                            <input type="submit" value="Save" class="btn btn-success btn-lg btn-block mt-4" />
                         </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </form>
-    <div>
-        <h3 class=>
-            tlt:Ingredients
+    <div class="mb-5">
+        <h3 class="text-secondary">
+            Ingredients
         </h3>
         {% if recipe.recipe_ingredients.all %}
             <ul class="list-group">
@@ -123,13 +110,16 @@
                 {% endfor %}
                 {% if not readonly %}
                     <li class="list-group-item">
-                        <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
+                        <form id="ingredient_form" action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
                             {% csrf_token %} 
                             <div class="col-md-12 row">
-                                <div class="col-md-8">      
-                                    {{ ing_rec_form }}
-                                </div>
-                                <div class="col-md-3">
+                                <div class="col-md-11 row">      
+                                    <div class="col-md-6">
+                                        {{ ing_rec_form.ingredient }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ ing_rec_form.amount_in_recipe }}
+                                    </div>
                                 </div>
                                 <div class="col-md-1">
                                     <button type="submit"  class="btn btn-success rounded pull-right col-md-12">
@@ -147,16 +137,19 @@
                     <li class="list-group-item">
                         <form action="{% url 'recipes:add_ingredient' recipe.recipe_id %}" method="post">
                             {% csrf_token %} 
-                            <div class="col-md-12 row">
-                                <div class="col-md-8">      
-                                    {{ ing_rec_form }}
+                            <div class="col-md-12 row"> 
+                                <div class="col-md-11 row">      
+                                    <div class="col-md-6">
+                                        {{ ing_rec_form.ingredient }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ ing_rec_form.amount_in_recipe }}
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                </div>
-                                <div class="col-md-1">       
+                                <div class="col-md-1">
                                     <button type="submit"  class="btn btn-success rounded pull-right col-md-12">
                                         <i class="fas fa-check"></i>
-                                    </button> 
+                                    </button>
                                 </div>
                             </div>
                         </form>

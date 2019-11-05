@@ -11,7 +11,7 @@ import sys
 
 
 def index(request):
-    return render(request, 'recipes/index.html', {'recipe_list': Recipe.objects.order_by('recipe_id')[:10]})
+    return render(request, 'recipes/index.html', {'recipe_list': Recipe.objects.order_by('recipe_id')})
 
 def save(request, recipe_id):
     try:
@@ -48,7 +48,7 @@ def delete(request, recipe_id):
                 request, 
                 'recipes/index.html', 
                 {
-                    'recipe_list': Recipe.objects.order_by('recipe_id')[:10],
+                    'recipe_list': Recipe.objects.order_by('recipe_id'),
                     'error_message': "tlt:Recipe does not exist" 
                 })
     
@@ -129,15 +129,21 @@ def get_recipe_context(recipe_id, readonly):
     ing_rec.recipe = recipe
     ing_rec_form = IngredientInRecipeForm(instance=ing_rec)
     
-    aggr = recipe.recipe_ingredients.aggregate(
-            total_cost=Sum(F('cost'))
-        )
+    total = 0
+    try:
+        aggr = recipe.recipe_ingredients.aggregate(
+                total_cost=Sum(F('cost'))
+            )
+        
+        total += aggr['total_cost']
+    except:
+        pass
     
     return {
         'recipe': recipe,
         'form':form,
         'ing_rec_form': ing_rec_form,
         'readonly': readonly,
-        'recipe_cost': aggr['total_cost']
+        'recipe_cost': total
     }
     

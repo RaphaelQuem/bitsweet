@@ -5,8 +5,9 @@
             <strong>{{ error_message }}</strong>
         </p>
     {% endif %}
-    <a href="{% url 'recipes:edit' '0' %}">Add</a>
+    
     {% if recipe_list %}
+        <a class="btn btn-success btn-large mb-2" href="{% url 'recipes:edit' '0' %}">Create new Recipe!</a>
         {% for recipe in recipe_list%}
             <div class="card bg-light mb-2">
                 <div class="card-header">
@@ -20,20 +21,31 @@
                     </div>
                     <div class="col-md-4 text-center mh-100">
                         {% if recipe.recipe_img_url %}
-                            <img class="img-fluid rounded" src="{{ recipe.recipe_img_url }}" onerror="this.onerror=null; this.src='Default.jpg'">
+                            <img class="img-fluid rounded" src="{{ recipe.recipe_img_url }}" onerror="imgOnError(this)">
                         {% else %}
                             <font style="font-size:72px;"><i class="fas fa-camera-retro"></i></font>
                         {% endif %}
                     </div>
                 </div>
                 <div class="card-footer text-right">
-                    <a class="btn btn-primary btn-sm pull-right" href="{% url 'recipes:details' recipe.recipe_id %}">tlt:View</a>
-                    <a class="btn btn-primary btn-sm pull-right" href="{% url 'recipes:edit' recipe.recipe_id %}">tlt:Edit</a>
-                    <a class="btn btn-danger btn-sm pull-right" href="{% url 'recipes:delete' recipe.recipe_id %}">tlt:Delete</a>
+                    <a class="btn btn-primary btn-sm pull-right" href="{% url 'recipes:details' recipe.recipe_id %}">View</a>
+                    <a class="btn btn-primary btn-sm pull-right" href="{% url 'recipes:edit' recipe.recipe_id %}">Edit</a>
+                    <a class="btn btn-danger btn-sm pull-right" href="{% url 'recipes:delete' recipe.recipe_id %}">Delete</a>
                 </div>
             </div>
         {% endfor %}
     {% else %}
-        tlt:Não tem nada
+        <div class="col-md-12 mb-5">
+            <p class="display-3 text-center">
+                Where are your recipes?
+            <p>
+            <p class="display-1 text-center">
+                :(
+            </p>
+            
+        </div>
+        <div class="col-md-12 mb-5 text-center">
+            <a class="btn btn-success btn-large mb-2 col-md-8" href="{% url 'recipes:edit' '0' %}">Create one!</a>
+        </div>
     {% endif%}
 {% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        {% if unit_list %}
+            <a class="col-md-12 btn btn-success btn-large mb-2" href="{% url 'units:create'  %}">Create new Ingredient!</a>
+            <ul class="list-group">
+                
+                {% for unit in unit_list%}
+                    <li class="list-group-item">
+                        <div class="col-md-12 row">
+                            <div class="col-md-8">
+                                {{unit.unit_name}}
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+        {% endif%}
+    </div>
+{% endblock %}

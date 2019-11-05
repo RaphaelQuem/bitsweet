@@ -7,21 +7,26 @@ from .forms import IngredientForm
 
 
 
+
 def index(request):
-    return render(request, 'ingredient/index.html', {'ingredient_list': Ingredient.objects.order_by('article_number')[:10]})
+    return render(request, 'ingredient/index.html', {'ingredient_list': Ingredient.objects.order_by('article_number')})
+
+
 
 def filter(request):
-    strfilter = request.POST['ingredient-filter']
+    strfilter = request.GET['ingredient-filter']
     try:
         strfilter = int(strfilter)
         filtered =  Ingredient.objects.filter(
                 Q(ingredient_name__icontains=strfilter) |
                 Q(article_number__exact=strfilter)
-            )[:10]
+            )
     except Exception:       
-        filtered = Ingredient.objects.filter(ingredient_name__icontains=strfilter).order_by('article_number')[:10]
+        filtered = Ingredient.objects.filter(ingredient_name__icontains=strfilter).order_by('article_number')
+
 
     return render(request, 'ingredient/index.html', {'ingredient_list': filtered, 'ingredient_filter': strfilter})
+
 
 def edit(request, article_number):
     try:
@@ -39,8 +44,8 @@ def delete(request, article_number):
         Ingredient.objects.get(pk=article_number).delete()
     except ProtectedError:
         return render(request, 'ingredient/index.html', {
-                'ingredient_list': Ingredient.objects.order_by('article_number')[:10],
-                'error_message': 'tlt: this ingredient is currently being used :('
+                'ingredient_list': Ingredient.objects.order_by('article_number'),
+                'error_message': 'This ingredient is currently being used, try deleting the recipes first!'
             })
     return HttpResponseRedirect(reverse('ingredient:index', args=()))
 

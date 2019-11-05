@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<a class="btn btn-secondary btn-sm mb-3" href="{% url 'units:index' %}">Back</a>
+{% if error_message %}
+<p class="alert alert-danger">
+	<strong>{{ error_message }}</strong>
+</p>
+{% endif %}
+
+<form action="{% url 'units:save' %}" method="post">
+    {% csrf_token %} 
+    <div class="col-md-12 mb-2 row">
+        <div class="col-md-12">
+            Unit Name
+            {{ form.unit_name}}
+        </div>
+        <div class="col-md-12">
+            Abbreviation
+            {{ form.unit_abbreviation}}
+        </div>
+    </div>
+	<input type="submit" value="Save" class="btn btn-success btn-lg btn-block mt-4" />
+</form>
+
+
+
+{% endblock %}

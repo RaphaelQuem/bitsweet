@@ -1,15 +1,15 @@
-from django.forms import ModelForm , TextInput, Textarea, NumberInput
+from django.forms import ModelForm , TextInput, Textarea, NumberInput, Select
 from .models import Recipe, IngredientInRecipe
  
 class RecipeForm(ModelForm):
     class Meta:
         model = Recipe
         widgets = {
-            'recipe_name': TextInput(attrs={'placeholder': 'tlt:Recipe Name', 'class': 'form-control','style': 'font-size: 32px;'}),
-            'recipe_img_url' : TextInput(attrs={'placeholder': 'tlt:Recipe_img_url', 'class':'form-control col-md-12'}),
-            'recipe_description': Textarea(attrs={'placeholder': 'tlt:Describe', 'class':'form-control'}),
-            'servings':NumberInput(attrs={'placeholder': 'tlt:Servings', 'class':'form-control','pattern':'[0-9]+'}),
-            'preparation_time':NumberInput(attrs={'placeholder': 'tlt:Servings', 'class':'form-control'})
+            'recipe_name': TextInput(attrs={'autofocus':'autofocus','placeholder': 'Recipe Name','class': 'form-control','style': 'font-size: 32px;'}),
+            'recipe_img_url' : TextInput(attrs={'onchange':'updateImage()','id':'recipe_img_url_ip','placeholder': 'Paste the link to the recipe image :)', 'class':'form-control col-md-12'}),
+            'recipe_description': Textarea(attrs={'placeholder': 'Example.: This recipe has been in my family for generations, my great grandmother used to boil eggs like this!', 'class':'form-control'}),
+            'servings':NumberInput(attrs={'placeholder': 'Servings', 'class':'form-control text-center'}),
+            'preparation_time':NumberInput(attrs={'placeholder': 'Time', 'class':'form-control text-center'})
         }
         fields = ['recipe_name','recipe_description', 'recipe_img_url', 'servings', 'preparation_time']
     def __init__(self, *args, **kwargs):
@@ -19,4 +19,8 @@ class RecipeForm(ModelForm):
 class IngredientInRecipeForm(ModelForm):
     class Meta:
         model = IngredientInRecipe
+        widgets = {
+            'amount_in_recipe':NumberInput(attrs={'placeholder': 'Amount', 'class':'form-control'}),
+            'ingredient': Select(attrs={ 'class': 'form-control'})
+        }
         fields = ['ingredient', 'amount_in_recipe']

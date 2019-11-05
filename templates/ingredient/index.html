@@ -5,14 +5,13 @@
         <strong>{{ error_message }}</strong>
     </p>
     {% endif %}
+    <form class="col-md-12 row mb-2" action="{% url 'ingredient:filter'  %}" method="get">
+        {% csrf_token %}
+        <input autofocus id="ingredient-filter"  name="ingredient-filter" placeholder="Search for ingredients by name or id" value="{{ ingredient_filter }}" type="text" class="form-control col-md-12 text-center"></input>
+    </form>
     <div class="container">
-        <div class="col-md-12 row mb-3 center">
-            <form class="col-md-12 row btn-block" action="{% url 'ingredient:filter'  %}" method="post">
-                {% csrf_token %}
-                <input autofocus id="ingredient-filter" name="ingredient-filter" placeholder="tlt:Filter" value="{{ ingredient_filter }}" type="text" class="form-control col-md-12"></input>
-            </form>
-        </div>
         {% if ingredient_list %}
+            <a class="col-md-12 btn btn-success btn-large mb-2" href="{% url 'ingredient:edit' '0' %}">Create new Ingredient!</a>
             <ul class="list-group">
                 {% for ingredient in ingredient_list%}
                     <li class="list-group-item">
@@ -21,19 +20,28 @@
                                 {{ingredient.ingredient_name}}
                             </div>
                             <div class="col-md-2 text-center">
-                                <a href="{% url 'ingredient:edit' ingredient.article_number %}">tlt:Edit</a>
+                                <a href="{% url 'ingredient:edit' ingredient.article_number %}">Edit</a>
                             </div>
                             <div class="col-md-2 text-center">
-                                <a href="{% url 'ingredient:delete' ingredient.article_number %}">tlt:Delete</a>
+                                <a href="{% url 'ingredient:delete' ingredient.article_number %}">Delete</a>
                             </div>
                         </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            tlt:Não tem nada
+            <div class="col-md-12 mb-5">
+                <p class="display-3 text-center">
+                    No ingredients found!
+                <p>
+                <p class="display-1 text-center">
+                    :(
+                </p>
+                
+            </div>
+            <div class="col-md-12 mb-5 text-center">
+                <a class="btn btn-success btn-large mb-2 col-md-8" href="{% url 'ingredient:edit' '0' %}">Create one!</a>
+            </div>
         {% endif%}
-        {{ newing }}
-        <a href="{% url 'ingredient:edit' '0' %}">Add</a>
     </div>
 {% endblock %}
