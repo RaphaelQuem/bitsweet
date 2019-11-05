@@ -2,20 +2,54 @@
 {% block content %}
     <div class="container">
         {% if unit_list %}
-            <a class="col-md-12 btn btn-success btn-large mb-2" href="{% url 'units:create'  %}">Create new Ingredient!</a>
+            <div class="col-md-12 mb-5">
+                <p class="display-4 text-center">
+                    <strong>Measurement units</strong>
+                <p>
+            </div>
+            <a class="col-md-12 btn btn-success btn-large mb-2" href="{% url 'units:create'  %}">Create new Measurement Unit!</a>
             <ul class="list-group">
-                
+                <li class="list-group-item bg-light">
+                    <div class="col-md-12 row ">
+                        <div class="col-md-4">
+                            <strong>Name</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Abbreviation</strong>
+                        </div>
+                    </div>
+                </li>
                 {% for unit in unit_list%}
                     <li class="list-group-item">
                         <div class="col-md-12 row">
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 {{unit.unit_name}}
+                            </div>
+                            <div class="col-md-4">
+                                {{unit.unit_abbreviation}}
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <a href="{% url 'units:delete' unit.unit_id %}" class="btn btn-danger rounded pull-right col-md-2">
+                                    <i class="fas fa-times"></i>
+                                </a>
                             </div>
                         </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
+            <div class="col-md-12 mb-5">
+                <p class="display-3 text-center">
+                    How are we going to measure things?
+                <p>
+                <p class="display-1 text-center">
+                    :(
+                </p>
+                
+            </div>
+            <div class="col-md-12 mb-5 text-center">
+                <a class="btn btn-success btn-large mb-2 col-md-8" href="{% url 'units:create'  %}">Create a measurement unit!</a>
+            </div>
         {% endif%}
     </div>
 {% endblock %}

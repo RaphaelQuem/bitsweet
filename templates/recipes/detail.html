@@ -70,7 +70,7 @@
                         <h4>
                             <i class="fas fa-dollar-sign"></i>
                         <h4>
-                        {{ recipe_cost | floatformat:2}}
+                        {{ recipe_cost | floatformat:2}} EUR
                     </div>
                     {% if not readonly %}
                         <div class="col-md-4">
@@ -90,13 +90,16 @@
                 {% for recipe_ingredient in recipe.recipe_ingredients.all %}        
                     <li class="list-group-item"> 
                         <div class="col-md-12 row">
-                            <div class="col-md-7">
+                            <div class="col-md-4">
                                 <strong>
                                     {{ recipe_ingredient.ingredient.ingredient_name }} 
                                 </strong>
                             </div>
-                            <div class="col-md-4">
-                                {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit}} ({{recipe_ingredient.cost | floatformat:2}})
+                            <div class="col-md-3">
+                                {{ recipe_ingredient.amount_in_recipe | floatformat:2 }} {{recipe_ingredient.ingredient.unit.unit_abbreviation}}
+                            </div>
+                            <div class="col-md-3">
+                                {{recipe_ingredient.cost | floatformat:2}} EUR
                             </div>
                             {% if not readonly%}
                                 <div class="col-md-1">
@@ -118,7 +121,7 @@
                                         {{ ing_rec_form.ingredient }}
                                     </div>
                                     <div class="col-md-6">
-                                        {{ ing_rec_form.amount_in_recipe }}
+                                        {{ ing_rec_form.amount_in_recipe }} 
                                     </div>
                                 </div>
                                 <div class="col-md-1">

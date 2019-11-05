@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="col-md-12 row text-center">
+        <div class="col-md-4 mb-5">
+            <h4 class="text-center">
+                First, create some measurement units!
+            </h4>
+        </div>
+        <div class="col-md-4">
+            <h4 class="text-center">
+                Then create your ingredients!
+            </h4>
+        </div>
+        <div class="col-md-4">
+            <h4 class="text-center">
+                And mix them up in delicious recipes!
+            </h4>
+        </div>
+        <div class="col-md-4">
+            <a class=" jumbotron btn btn-success btn-large mb-2 col-md-8" href="{% url 'units:index' %}">Units</a>
+        </div>
+        <div class="col-md-4">
+            <a class=" jumbotron btn btn-success btn-large mb-2 col-md-8" href="{% url 'ingredient:index'  %}">Ingredients</a>
+        </div>
+        <div class="col-md-4">
+            <a class="jumbotron btn btn-success btn-large mb-2 col-md-8" href="{% url 'recipes:index' %}">Recipes</a>
+        </div>
+    </div>
+{% endblock %}

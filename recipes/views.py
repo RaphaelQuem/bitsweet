@@ -32,7 +32,7 @@ def save(request, recipe_id):
                 
     except:
         context = get_recipe_context(recipe_id,False)
-        context["error_message"] = "tlt:Unexpected error" + sys.exc_info()[0]
+        context["error_message"] = "Unexpected error" + sys.exc_info()[0]
         return render(
             request, 
             'recipes/details.html', 
@@ -49,7 +49,7 @@ def delete(request, recipe_id):
                 'recipes/index.html', 
                 {
                     'recipe_list': Recipe.objects.order_by('recipe_id'),
-                    'error_message': "tlt:Recipe does not exist" 
+                    'error_message': "Recipe does not exist!" 
                 })
     
     return HttpResponseRedirect(reverse('recipes:index', args=()))
@@ -80,7 +80,7 @@ def add_ingredient(request, recipe_id):
         
     except IntegrityError:
         context = get_recipe_context(recipe_id, False)
-        context["error_message"] = "tlt: save the recipe first"
+        context["error_message"] = "Please save the recipe first"
         return render(
                 request, 
                 'recipes/detail.html',
@@ -88,7 +88,7 @@ def add_ingredient(request, recipe_id):
                 )
     except:
         context = get_recipe_context(recipe_id, False)
-        context["error_message"] = "tlt:Unexpected error" + sys.exc_info()[0]
+        context["error_message"] = "Unexpected error: " + sys.exc_info()[0]
         return render(
                 request, 
                 'recipes/detail.html',

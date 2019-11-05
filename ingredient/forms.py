@@ -6,7 +6,7 @@ class IngredientForm(ModelForm):
         model = Ingredient
         widgets = {
             'ingredient_name': TextInput(attrs={'autofocus':'autofocus','placeholder': 'Choose an intuitive name!', 'class': 'form-control'}),
-            'cost_amount':NumberInput(attrs={'placeholder': 'Amount', 'class': 'form-control'}),
+            'cost_amount':NumberInput(attrs={'pattern':'0|[1-9]\d{0,2}','placeholder': 'Amount', 'class': 'form-control'}),
             'cost_per_unit':NumberInput(attrs={'placeholder': 'Cost', 'class': 'form-control'}),
             'unit': Select(attrs={ 'class': 'form-control'})
         }

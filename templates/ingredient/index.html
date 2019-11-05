@@ -5,6 +5,13 @@
         <strong>{{ error_message }}</strong>
     </p>
     {% endif %}
+    {% if ingredient_list %}
+        <div class="col-md-12 mb-5">
+            <p class="display-4 text-center">
+                <strong>Ingredients</strong>
+            <p>
+        </div>
+    {% endif %}
     <form class="col-md-12 row mb-2" action="{% url 'ingredient:filter'  %}" method="get">
         {% csrf_token %}
         <input autofocus id="ingredient-filter"  name="ingredient-filter" placeholder="Search for ingredients by name or id" value="{{ ingredient_filter }}" type="text" class="form-control col-md-12 text-center"></input>
@@ -13,17 +20,40 @@
         {% if ingredient_list %}
             <a class="col-md-12 btn btn-success btn-large mb-2" href="{% url 'ingredient:edit' '0' %}">Create new Ingredient!</a>
             <ul class="list-group">
+                <li class="list-group-item bg-light">
+                    <div class="col-md-12 row">
+                        <div class="col-md-10 row">
+                            <div class="col-md-1">
+                                <strong>Id</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Name</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>cost</strong>
+                            </div>
+                        </div>
+                    </div>
+                </li>
                 {% for ingredient in ingredient_list%}
                     <li class="list-group-item">
                         <div class="col-md-12 row">
-                            <div class="col-md-8">
-                                {{ingredient.ingredient_name}}
+                            <div class="col-md-10 row">
+                                <div class="col-md-1">
+                                    {{ingredient.article_number}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ingredient.ingredient_name}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ingredient.cost_per_unit }} EUR / {{ingredient.cost_amount }} {{ingredient.unit.unit_abbreviation }}
+                                </div>
                             </div>
-                            <div class="col-md-2 text-center">
-                                <a href="{% url 'ingredient:edit' ingredient.article_number %}">Edit</a>
-                            </div>
-                            <div class="col-md-2 text-center">
-                                <a href="{% url 'ingredient:delete' ingredient.article_number %}">Delete</a>
+                            <div class="col-md-2 text-right row">
+                                <a href="{% url 'ingredient:edit' ingredient.article_number %}" class="btn btn-primary rounded pull-right col-md-6 mr-2">Edit</a>
+                                <a href="{% url 'ingredient:delete' ingredient.article_number %}" class="btn btn-danger rounded pull-right col-md-4">
+                                    <i class="fas fa-times"></i>
+                                </a>
                             </div>
                         </div>
                     </li>
