@@ -19,15 +19,11 @@ git clone https://github.com/raphaelquem/bitsweet.git
 cd bitsweet
 ```
 
-Then run the migrations to create the database
-
-``` python
-python manage.py migrate
-```
-
 And finnaly run the project 
 
 
 ``` python
 python manage.py runserver
 ```
+
+And open your browser on localhost:8000
