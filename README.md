@@ -19,7 +19,7 @@ git clone https://github.com/raphaelquem/bitsweet.git
 cd bitsweet
 ```
 
-And finnaly run the project 
+And finally run the project 
 
 
 ``` python
